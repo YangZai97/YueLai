@@ -10,8 +10,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <router-link class="navbar-brand" to="/dashboard/v2"><span class="navbar-logo"></span> <b>Color</b>
-                    Admin
+                <router-link class="navbar-brand" to="/Home"><span class="navbar-logo"></span> <b>悦莱珠宝</b>
                 </router-link>
                 <button class="navbar-toggle pt-0 pb-0 mr-0 collapsed" type="button" v-if="pageOptions.pageWithTopMenu && !pageOptions.pageWithoutSidebar"
                         v-on:click="toggleMobileTopMenu">
@@ -41,60 +40,17 @@
                 </button>
             </div>
             <!-- end navbar-header -->
-
             <header-mega-menu v-if="pageOptions.pageWithMegaMenu"></header-mega-menu>
-
             <!-- begin header-nav -->
             <ul class="navbar-nav navbar-right">
-                <li class="navbar-form">
-                    <form name="search_form" v-on:submit="checkForm">
-                        <div class="form-group">
-                            <input class="form-control" placeholder="Enter keyword" type="text"/>
-                            <button class="btn btn-search" type="submit"><i class="fa fa-search"></i></button>
-                        </div>
-                    </form>
-                </li>
-                <b-nav-item-dropdown menu-class="media-list dropdown-menu-right" no-caret toggle-class="f-s-14">
-                    <template slot="button-content">
-                        <i class="fa fa-bell"></i>
-                        <span class="label">0</span>
-                    </template>
-                    <b-dropdown-header>NOTIFICATIONS (0)</b-dropdown-header>
-                    <b-dropdown-item class="text-center width-300" href="javascript:;">
-                        No notification found
-                    </b-dropdown-item>
-                </b-nav-item-dropdown>
-                <b-nav-item-dropdown menu-class="navbar-language" no-caret v-if="pageOptions.pageWithLanguageBar">
-                    <template slot="button-content">
-                        <span class="flag-icon flag-icon-us mr-1" title="us"></span>
-                        <span class="name d-none d-sm-inline mr-1">EN</span> <b class="caret"></b>
-                    </template>
-                    <b-dropdown-item href="javascript:;"><span class="flag-icon flag-icon-us" title="us"></span> English
-                    </b-dropdown-item>
-                    <b-dropdown-item href="javascript:;"><span class="flag-icon flag-icon-cn" title="cn"></span> Chinese
-                    </b-dropdown-item>
-                    <b-dropdown-item href="javascript:;"><span class="flag-icon flag-icon-jp" title="jp"></span>
-                        Japanese
-                    </b-dropdown-item>
-                    <b-dropdown-item href="javascript:;"><span class="flag-icon flag-icon-be" title="be"></span> Belgium
-                    </b-dropdown-item>
-                    <b-dropdown-divider class="m-b-0"></b-dropdown-divider>
-                    <b-dropdown-item class="text-center" href="javascript:;">more options</b-dropdown-item>
-                </b-nav-item-dropdown>
                 <b-nav-item-dropdown class="dropdown navbar-user" menu-class="dropdown-menu-right" no-caret>
                     <template slot="button-content">
                         <div class="image image-icon bg-black text-grey-darker">
                             <i class="fa fa-user"></i>
                         </div>
-                        <span style="font-size: 14px" class=" d-md-inline">Admin</span> <b class="caret"></b>
+                        <span style="font-size: 14px" class=" d-md-inline">{{username}}</span> <b class="caret"></b>
                     </template>
-                    <b-dropdown-item href="javascript:;">Edit Profile</b-dropdown-item>
-                    <b-dropdown-item href="javascript:;"><span class="badge badge-danger pull-right">0</span> Inbox
-                    </b-dropdown-item>
-                    <b-dropdown-item href="javascript:;">Calendar</b-dropdown-item>
-                    <b-dropdown-item href="javascript:;">Setting</b-dropdown-item>
-                    <b-dropdown-divider></b-dropdown-divider>
-                    <b-dropdown-item href="javascript:;">Log Out</b-dropdown-item>
+                    <b-dropdown-item href="javascript:;" @click="logOut">退出登录</b-dropdown-item>
                 </b-nav-item-dropdown>
                 <li class="divider d-none d-md-block" v-if="pageOptions.pageWithTwoSidebar"></li>
                 <li class="d-none d-md-block" v-if="pageOptions.pageWithTwoSidebar">
@@ -120,10 +76,16 @@
         },
         data() {
             return {
+                username:'红豆憨憨',
                 pageOptions: PageOptions
             };
         },
         methods: {
+            logOut(){
+                this.cookies.remove('token');
+                this.username = null;
+                this.$router.push({path:'/'});
+            },
             toggleMobileSidebar() {
                 this.pageOptions.pageMobileSidebarToggled = !this.pageOptions.pageMobileSidebarToggled;
             },

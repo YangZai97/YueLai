@@ -11,10 +11,6 @@
                     class="fa fa-expand"></i></a>
                 <a class="btn btn-xs btn-icon btn-circle btn-success" href="javascript:;" v-on:click="panelReload"><i
                     class="fa fa-redo"></i></a>
-                <a class="btn btn-xs btn-icon btn-circle btn-warning" href="javascript:;" v-on:click="panelCollapse"><i
-                    class="fa fa-minus"></i></a>
-                <a class="btn btn-xs btn-icon btn-circle btn-danger" href="javascript:;" v-on:click="panelRemove"><i
-                    class="fa fa-times"></i></a>
             </div>
         </div>
         <slot name="beforeBody"></slot>

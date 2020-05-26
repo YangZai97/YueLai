@@ -5,7 +5,7 @@
             <input class="form-control" placeholder="Sidebar menu filter..." type="text"
                    v-on:keyup="handleSidebarFilter"/>
         </li>
-        <li class="nav-header">Navigation</li>
+        <li class="nav-header">导航菜单</li>
         <template v-for="menu in menus">
             <sidebar-nav-list
                 ref="sidebarNavList"
