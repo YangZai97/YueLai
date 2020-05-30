@@ -9,29 +9,55 @@
                               stripe
                               border
                     >
-                        <el-table-column prop="time"
+                        <el-table-column prop="created_at"
                                          label="日期"
+                                         width="140"
                                          align="center">
                         </el-table-column>
-                        <el-table-column prop="title"
+                        <el-table-column prop="goods.category_name"
                                          label="商品类型"
+                                         width="140"
+                                         align="center">
+                        </el-table-column>
+                        <el-table-column prop="goods.name"
+                                         label="商品名称"
+                                         width="140"
+                                         align="center">
+                        </el-table-column>
+                        <el-table-column prop="user_name"
+                                         label="销售人"
+                                         width="100"
                                          align="center">
                         </el-table-column>
                         <el-table-column prop="number"
-                                         label="商品名称"
+                                         label="数量"
+                                         width="80"
                                          align="center">
                         </el-table-column>
-                        <el-table-column prop="cout"
-                                         label="销售人"
+                        <el-table-column prop="amount"
+                                         width="100"
+                                         label="总金额"
                                          align="center">
                         </el-table-column>
-                        <el-table-column prop="moeny"
-                                         label="金额"
+                        <el-table-column prop="remark"
+                                         label="备注"
+                                         width="300"
                                          align="center">
                         </el-table-column>
                     </el-table>
                 </panel>
 
+            </div>
+            <div class="block" style="margin:0 auto;margin-top:5px">
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="page"
+                    :page-sizes="[20, 50, 100]"
+                    :page-size="size"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="count">
+                </el-pagination>
             </div>
 
         </div>
@@ -42,25 +68,41 @@
     export default {
         data() {
             return {
-                tableData: [
-                    {title: '头冠', number: '罪恶王冠全钻打造', cout: '红豆', time: '2016-02-22 00:16:07', moeny: 87972110},
-                    {title: '手镯', number: '铂金手镯/20年新款', cout: '黑豆', time: '2020-05-12 11:16:17', moeny: 800},
-                    {title: '手镯', number: '铂金手镯/20年新款', cout: '绿豆', time: '2020-05-12 11:16:55', moeny: 810},
-                    {title: '戒指', number: '24k金戒指/圣诞节限定', cout: '青豆', time: '2020-04-22 01:06:18', moeny: 2478},
-                    {title: '戒指', number: '24k金戒指/圣诞节限定', cout: '蓝豆', time: '2020-04-22 01:06:18', moeny: 2478},
-                    {title: '手镯', number: '铂金手镯/20年新款', cout: '紫豆', time: '2020-05-12 11:16:17', moeny: 800},
-                    {title: '头冠', number: '罪恶王冠全钻打造', cout: '黄豆', time: '2016-02-22 00:16:07', moeny: 87972110},
-                    {title: '戒指', number: '24k金戒指/圣诞节限定', cout: '蓝豆', time: '2020-04-22 01:06:18', moeny: 2478},
-                    {title: '手镯', number: '铂金手镯/20年新款', cout: '红豆', time: '2020-05-12 11:16:17', moeny: 800},
-                    {title: '戒指', number: '24k金戒指/圣诞节限定', cout: '蓝豆', time: '2020-04-22 01:06:18', moeny: 2478},
-                    {title: '手镯', number: '铂金手镯/20年新款', cout: '红豆', time: '2020-05-12 11:16:17', moeny: 800},
-                ],
-                loading: false
+                tableData: [],
+                page: 1,
+                size: 20,
+                count: 0,
+                loading: true
             };
         },
+        mounted() {
+            this.getBillList();
+        },
         methods: {
-            goDetalis(row) {
-                console.log(row);
+            getBillList() {
+                let data = {
+                    page: this.page,
+                    size: this.size,
+                };
+                this.$product.getBill(data).then(res => {
+                    console.log(res);
+                    this.loading = false;
+                    this.count = res.data.count;
+                    this.tableData = res.data.results;
+                });
+            },
+            handleSizeChange(val) {
+                this.page = 1;
+                this.size = val;
+                this.loading = true;
+                this.getBillList();
+                console.log(`每页 ${val} 条`);
+            },
+            handleCurrentChange(val) {
+                this.page = val;
+                this.loading = true;
+                this.getBillList();
+                console.log(`当前页: ${val}`);
             }
         }
     };

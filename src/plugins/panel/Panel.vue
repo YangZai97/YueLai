@@ -9,8 +9,6 @@
             <div class="panel-heading-btn" v-if="!noButton">
                 <a class="btn btn-xs btn-icon btn-circle btn-default" href="javascript:;" v-on:click="panelExpand"><i
                     class="fa fa-expand"></i></a>
-                <a class="btn btn-xs btn-icon btn-circle btn-success" href="javascript:;" v-on:click="panelReload"><i
-                    class="fa fa-redo"></i></a>
             </div>
         </div>
         <slot name="beforeBody"></slot>

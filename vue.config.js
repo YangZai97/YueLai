@@ -13,7 +13,7 @@ module.exports = {
         },
         proxy: {
             '/api': {
-                target: process.env.PROXY_HOST,
+                target: 'http://47.98.34.221:8080/',
                 changeOrigin: true,
                 pathRewrite: {
                     '^/': ''

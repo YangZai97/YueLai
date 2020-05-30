@@ -20,24 +20,26 @@
             <!-- end login-header -->
             <!-- begin login-content -->
             <div class="login-content">
-                    <div class="form-group m-b-15">
-                        <input type="text" class="form-control form-control-lg" placeholder="Email Address" required/>
-                    </div>
-                    <div class="form-group m-b-15">
-                        <input type="password" class="form-control form-control-lg" placeholder="Password" required/>
-                    </div>
-                    <div class="login-buttons">
-                        <button  class="btn btn-success btn-block btn-lg">登录</button>
-                    </div>
-                    <div class="m-t-20 m-b-40 p-b-40 text-inverse">
-                        Not a member yet? Click
-                        <router-link to="Register" class="text-success">here</router-link>
-                        to register.
-                    </div>
-                    <hr/>
-                    <p class="text-center text-grey-darker">
-                        &copy; YueLai All Right Reserved 2020
-                    </p>
+                <div class="form-group m-b-15">
+                    <input type="text" class="form-control form-control-lg" v-model="username" placeholder="Username"
+                           required/>
+                </div>
+                <div class="form-group m-b-15">
+                    <input type="password" class="form-control form-control-lg" v-model="password"
+                           placeholder="Password" required/>
+                </div>
+                <div class="login-buttons">
+                    <button class="btn btn-success btn-block btn-lg" @click="login">登录</button>
+                </div>
+                <div class="m-t-20 m-b-40 p-b-40 text-inverse">
+                    没有账号? 点击
+                    <router-link to="Register" class="text-success">这里注册</router-link>
+
+                </div>
+                <hr/>
+                <p class="text-center text-grey-darker">
+                    &copy; YueLai All Right Reserved 2020
+                </p>
             </div>
             <!-- end login-content -->
         </div>
@@ -50,6 +52,12 @@
     import PageOptions from '../config/PageOptions.vue';
 
     export default {
+        data() {
+            return {
+                username: null,
+                password: null
+            };
+        },
         created() {
             PageOptions.pageEmpty = true;
             document.body.className = 'bg-white';
@@ -60,10 +68,30 @@
             next();
         },
         methods: {
-            checkForm: function (e) {
-                e.preventDefault();
-                this.$router.push({path: '/dashboard/v2'});
+            login() {
+                if (this.username == null || this.password == null) {
+                    this.$message.error('请输入正确的账号和密码');
+                    return;
+                }
+                let data = {
+                    username: this.username,
+                    password: this.password
+                };
+                this.$account.login(data).then(res => {
+                    console.log(res);
+                    this.$message.success('登录成功');
+                    let token = 'JWT ' + res.data.access;
+                    this.cookies.set('token', token);
+                    this.$router.push({ path: '/Home' });
+                }).catch(() => {
+                    this.$message.error('账号或密码错误，请重试');
+                });
             }
         }
     };
 </script>
+<style scoped>
+    .news-image {
+        background: url('../assets/register.gif');
+    }
+</style>

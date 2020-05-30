@@ -7,23 +7,26 @@
                     <el-table :data="tableData"
                               v-loading="loading"
                               stripe
+                              row-key="id"
+                              :tree-props="{children: 'sub_cat'}"
                               border
                     >
-                        <el-table-column prop="title"
+                        <el-table-column prop="name"
                                          label="商品类型"
+                                         width="400"
                                          align="center">
                         </el-table-column>
-                        <el-table-column prop="number"
-                                         label="总库存"
+                        <el-table-column prop="total_count"
+                                         label="库存量"
                                          align="center">
                         </el-table-column>
-                        <el-table-column prop="cout"
-                                         label="已售库存"
+                        <el-table-column prop="sold_total_count"
+                                         label="已卖出"
                                          align="center">
                         </el-table-column>
                         <el-table-column align="center" label="操作">
                             <template slot-scope="scope">
-                                <el-button type="primary" size="mini" @click="goDetalis(scope.row)">查看库存</el-button>
+                                <el-button type="primary" v-if="scope.row.category_type==2" size="mini" @click="details(scope.row)">查看库存</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -39,19 +42,30 @@
     export default {
         data() {
             return {
-                tableData: [
-                    {title: '手镯', number: 14, cout: 2},
-                    {title: '戒指', number: 42, cout: 7},
-                    {title: '头冠', number: '暂无库存', cout: 1},
-                    {title: '项链', number: 8, cout: 3},
-                    {title: '耳环', number: 92, cout: 11}
-                ],
-                loading: false
+                tableData: [],
+                loading: true
             };
         },
+        mounted() {
+            this.getList();
+        },
         methods: {
-            goDetalis(row) {
+            getList() {
+                let data = {
+                    size: 300,
+                    page: 1,
+                    // eslint-disable-next-line camelcase
+                    category_type: 1
+                };
+                this.$product.productList(data).then(res => {
+                    console.log(res);
+                    this.loading = false;
+                    this.tableData = res.data.results;
+                });
+            },
+            details(row) {
                 console.log(row);
+                this.$router.push({path: '/Detail', query: {id: row.id, name: row.name}});
             }
         }
     };

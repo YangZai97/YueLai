@@ -5,6 +5,7 @@
     import VueRouter from "vue-router";
     import Bill from '../pages/Bill';
     import Forecast from '../pages/Forecast';
+    import Detail from '../pages/detail';
 
     const routes = [
         {path: '/', component: Login},
@@ -12,6 +13,7 @@
         {path: '/Register', component: Register},
         {path: '/Bill', component: Bill},
         {path: '/Forecast', component: Forecast},
+        {path: '/Detail', component: Detail},
     ];
 
     const router = new VueRouter({

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Message } from 'element-ui';
+import {Message} from 'element-ui';
 import router from '@/config/PageRoutes';
 import Cookies from 'js-cookie';
 
@@ -26,10 +26,16 @@ axios.interceptors.response.use(
         if (error.response.status) {
             switch (error.response.status) {
                 case 401:
-                    Message.error('登录已失效，请重新登录后再试');
-                    localStorage.clear();
-                    Cookies.remove('token');
-                    router.push({ path: '/login' });
+
+                    var url = window.location.pathname;
+                    if (url == '/' || url == '/Register') {
+                        console.log(url);
+                    } else {
+                        router.push({path: '/'});
+                        Message.error('登录已失效，请重新登录后再试');
+                        localStorage.clear();
+                        Cookies.remove('token');
+                    }
                     break;
                 case 500:
                     Message.error(
