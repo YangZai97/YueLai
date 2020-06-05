@@ -34,14 +34,18 @@
                                          width="80"
                                          align="center">
                         </el-table-column>
+                        <el-table-column prop="profit"
+                                         label="利润额(¥)"
+                                         width="100"
+                                         align="center">
+                        </el-table-column>
                         <el-table-column prop="amount"
                                          width="100"
-                                         label="总金额"
+                                         label="总金额(¥)"
                                          align="center">
                         </el-table-column>
                         <el-table-column prop="remark"
                                          label="备注"
-                                         width="300"
                                          align="center">
                         </el-table-column>
                     </el-table>

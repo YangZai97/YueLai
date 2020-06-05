@@ -58,6 +58,8 @@ Vue.prototype.$account = account.account;
 Vue.prototype.$product = product.product;
 Vue.prototype.$Message = Message.MessageFuntion;
 Vue.prototype.cookies = Cookies;
+import echarts from 'echarts';
+Vue.prototype.$echarts = echarts;
 Vue.prototype.$axios = axios;
 Vue.use(VueX);
 Vue.use(ElementUI);

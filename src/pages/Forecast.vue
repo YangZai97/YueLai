@@ -2,8 +2,15 @@
     <div>
         <div class="row">
             <div class="col-xl-12">
-                <panel title="价格走势">
-                    <line-chart :data="lineChart.data" :options="lineChart.options" class="height-sm"></line-chart>
+                <panel title="黄金价格走势 (元/克)">
+                    <line-chart :data="lineChart.data" ref="chart" :options="lineChart.options"
+                                class="height-sm"></line-chart>
+                </panel>
+            </div>
+            <div class="col-xl-12">
+                <panel title="白银价格走势 (元/千克)">
+                    <line-chart :data="lineChart2.data" ref="chart2" :options="lineChart2.options"
+                                class="height-sm"></line-chart>
                 </panel>
             </div>
         </div>
@@ -19,42 +26,28 @@
         },
         data() {
             return {
+                loading: null,
                 lineChart: {
                     data: {
-                        labels: ['一月', '二月', '三月', '四月', '五月'],
+                        labels: [],
                         datasets: [{
-                            label: '黄金',
+                            label: '早盘',
                             backgroundColor: 'rgba(52, 143, 226, 0.2)',
                             borderColor: '#348fe2',
                             pointBackgroundColor: '#348fe2',
                             pointRadius: 2,
                             borderWidth: 2,
-                            data: [345, 260, 248, 300, 349, 358, 350, 45, 52, 39, 43, 67]
-                        }, {
-                            label: '银',
-                            backgroundColor: 'rgba(52, 143, 226, 0.2)',
-                            borderColor: '#1c955f',
-                            pointBackgroundColor: '#348fe2',
-                            pointRadius: 2,
-                            borderWidth: 2,
-                            data: [150, 200, 148, 80, 149, 258, 350, 45, 52, 39, 43, 67]
-                        }, {
-                            label: '青铜',
-                            backgroundColor: 'rgba(52, 143, 226, 0.2)',
-                            borderColor: '#397ffa',
-                            pointBackgroundColor: '#348fe2',
-                            pointRadius: 2,
-                            borderWidth: 2,
-                            data: [100, 200, 348, 280, 149, 258, 350, 45, 52, 39, 43, 67]
-                        }, {
-                            label: '铂金',
-                            backgroundColor: 'rgba(45, 53, 60, 0.2)',
-                            borderColor: '#2d353c',
-                            pointBackgroundColor: '#2d353c',
-                            pointRadius: 2,
-                            borderWidth: 2,
-                            data: [800, 618, 720, 818, 820, 823, 820, 18, 22, 18, 20, 23]
-                        }]
+                            data: []
+                        },
+                            {
+                                label: '午盘',
+                                backgroundColor: 'rgba(45, 53, 60, 0.3)',
+                                borderColor: '#2d353c',
+                                pointBackgroundColor: '#2d353c',
+                                pointRadius: 2,
+                                borderWidth: 2,
+                                data: []
+                            }]
                     },
                     options: {
                         responsive: true,
@@ -71,7 +64,50 @@
                             yAxes: [{
                                 ticks: {
                                     beginAtZero: true,
-                                    max: 1000
+                                    max: 500
+                                }
+                            }]
+                        }
+                    }
+                },
+                lineChart2: {
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: '早盘',
+                            backgroundColor: 'rgba(52, 143, 226, 0.2)',
+                            borderColor: '#348fe2',
+                            pointBackgroundColor: '#348fe2',
+                            pointRadius: 2,
+                            borderWidth: 2,
+                            data: []
+                        },
+                            {
+                                label: '午盘',
+                                backgroundColor: 'rgba(45, 53, 60, 0.3)',
+                                borderColor: '#2d353c',
+                                pointBackgroundColor: '#2d353c',
+                                pointRadius: 2,
+                                borderWidth: 2,
+                                data: []
+                            }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        hover: {
+                            mode: 'nearest',
+                            intersect: true
+                        },
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    max: 5000
                                 }
                             }]
                         }
@@ -79,7 +115,61 @@
                 }
             };
         },
-        methods: {}
+        mounted() {
+            this.loadingFunction();
+            this.sprider();
+        },
+        methods: {
+            sprider(){
+                this.$product.spider().then(()=>{
+                    this.loading.close();
+                    this.getList();
+                    this.getsilver();
+                });
+            },
+            getList() {
+                // 黄金
+                let data = {
+                    page: 1,
+                    size: 15,
+                    type: 'gold',
+                };
+                this.$product.getForecastList(data).then(res => {
+                    console.log(res);
+                    res.data.results.map(item => {
+                        this.lineChart.data.labels.push(item.date);
+                        this.lineChart.data.datasets[0].data.push(item.zp_price);
+                        this.lineChart.data.datasets[1].data.push(item.wp_price);
+                        this.$refs.chart.renderChart(this.lineChart.data, this.lineChart.options);
+                    });
+                });
+            },
+            getsilver() {
+                // 白银
+                let data = {
+                    page: 1,
+                    size: 15,
+                    type: 'silver',
+                };
+                this.$product.getForecastList(data).then(res => {
+                    console.log(res);
+                    res.data.results.map(item => {
+                        this.lineChart2.data.labels.push(item.date);
+                        this.lineChart2.data.datasets[0].data.push(item.zp_price);
+                        this.lineChart2.data.datasets[1].data.push(item.wp_price);
+                        this.$refs.chart2.renderChart(this.lineChart2.data, this.lineChart2.options);
+                    });
+                });
+            },
+            loadingFunction() {
+                this.loading = this.$loading({
+                    lock: true,
+                    text: '正在查询数据中...',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+            }
+        }
     };
 </script>
 

@@ -6,6 +6,7 @@
     import Bill from '../pages/Bill';
     import Forecast from '../pages/Forecast';
     import Detail from '../pages/detail';
+    import Profit from '../pages/profit';
 
     const routes = [
         {path: '/', component: Login},
@@ -14,6 +15,7 @@
         {path: '/Bill', component: Bill},
         {path: '/Forecast', component: Forecast},
         {path: '/Detail', component: Detail},
+        {path: '/Profit', component: Profit},
     ];
 
     const router = new VueRouter({

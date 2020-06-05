@@ -4,7 +4,9 @@ let product = {
     productList,
     productDetails,
     buyProduct,
-    getBill
+    getBill,
+    spider,
+    getForecastList
 };
 
 function productList(data) {
@@ -30,10 +32,24 @@ function buyProduct(id, data) {
         data: data
     });
 }
+function spider() {
+    return axios({
+        url: `/api/goods/resource/spider/`,
+        method: 'get'
+    });
+}
 
 function getBill(data) {
     return axios({
         url: `/api/account/bills/`,
+        method: 'get',
+        params:data
+    });
+}
+
+function getForecastList(data) {
+    return axios({
+        url: `/api/goods/resource/`,
         method: 'get',
         params:data
     });

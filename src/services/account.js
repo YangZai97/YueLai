@@ -3,6 +3,7 @@ import axios from 'axios';
 let account = {
     register,
     login,
+    getSoldList,
     getUserInfo,
     editorPassword
 };
@@ -36,6 +37,13 @@ function editorPassword(id, data) {
         url: `/api/account/users/${id}/set_password/`,
         method: 'put',
         data: data
+    });
+
+}
+function getSoldList() {
+    return axios({
+        url: `/api/account/users/revenue/`,
+        method: 'get'
     });
 
 }
