@@ -1,16 +1,130 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-xl-12">
+            <div class="col-xl-8">
                 <panel title="黄金价格走势 (元/克)">
                     <line-chart :data="lineChart.data" ref="chart" :options="lineChart.options"
                                 class="height-sm"></line-chart>
                 </panel>
             </div>
-            <div class="col-xl-12">
+            <div class="col-xl-4">
+                <!-- begin panel -->
+                <panel title="黄金价格走势预测(元/克)" bodyClass="p-t-0">
+                    <div class="table-responsive">
+                        <table class="table table-valign-middle">
+                            <thead>
+                            <tr>
+                                <th>类型</th>
+                                <th>价格</th>
+                                <th>趋势</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><label class="label label-danger">明天早盘黄金预测</label></td>
+                                <td>{{yuceData.goldZpTotol}}</td>
+                                <td>
+                                        <span class="text-success"><div
+                                            v-if="yuceData.goldZpTotolToday<yuceData.goldZpTotol" style="color: red">
+                                            <i class="fa fa-arrow-up"
+                                            ></i>
+ {{yuceData.goldZpPercentage | abs}}%
+                                        </div>
+                                        <div v-if="yuceData.goldZpTotolToday>yuceData.goldZpTotol" style="color: green">
+                                            <i class="fa fa-arrow-down"
+                                            ></i>
+                                            {{yuceData.goldZpPercentage | abs}}%
+                                        </div>
+                                        </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label class="label label-warning">明天午盘黄金预测</label></td>
+                                <td>{{yuceData.goldWpTotol}}</td>
+                                <td>
+                                        <span class="text-success">
+                                           <div v-if="yuceData.goldWpTotolToday<yuceData.goldWpTotol"
+                                                style="color: red">
+                                               <i class="fa fa-arrow-up"
+                                               ></i>
+                                               {{yuceData.goldWpPercentage | abs}}%
+                                           </div>
+                                        <div v-if="yuceData.goldWpTotolToday>yuceData.goldWpTotol"
+                                             style="color: green">
+                                            <i class="fa fa-arrow-down"
+                                            ></i>
+                                               {{yuceData.goldWpPercentage | abs}}%
+                                        </div>
+                                        </span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </panel>
+            </div>
+            <div class="col-xl-8">
                 <panel title="白银价格走势 (元/千克)">
                     <line-chart :data="lineChart2.data" ref="chart2" :options="lineChart2.options"
                                 class="height-sm"></line-chart>
+                </panel>
+            </div>
+            <div class="col-xl-4">
+                <!-- begin panel -->
+                <panel title="白银价格走势预测(元/千克)" bodyClass="p-t-0">
+                    <div class="table-responsive">
+                        <table class="table table-valign-middle">
+                            <thead>
+                            <tr>
+                                <th>类型</th>
+                                <th>价格</th>
+                                <th>趋势</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><label class="label label-danger">明天早盘白银预测</label></td>
+                                <td>{{yuceData.silverZpTotol}}</td>
+                                <td>
+                                        <span class="text-success">
+                                            <div style="color: red"
+                                                 v-if="yuceData.silverZpTotolToday<yuceData.silverZpTotol">
+                                                <i class="fa fa-arrow-up"
+                                                ></i>
+                                                {{yuceData.silverZpPercentage |abs}}%
+                                            </div>
+                                        <div v-if="yuceData.silverZpTotolToday>yuceData.silverZpTotol"
+                                             style="color: green">
+                                            <i class="fa fa-arrow-down"
+                                            ></i>
+                                            {{yuceData.silverZpPercentage |abs}}%
+                                        </div>
+
+                                        </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label class="label label-warning">明天午盘白银预测</label></td>
+                                <td>{{yuceData.silverWpTotol}}</td>
+                                <td>
+                                        <span class="text-success"><div style="color: red"
+                                                                        v-if="yuceData.silverWpTotolToday<yuceData.silverWpTotol">
+                                            <i class="fa fa-arrow-up"
+                                            ></i>
+                                            {{yuceData.silverWpPercentage | abs}}%
+                                        </div>
+                                            <div v-if="yuceData.silverWpTotolToday>yuceData.silverWpTotol"
+                                                 style="color: green">
+                                                <i class="fa fa-arrow-down"
+                                                ></i>
+                                                {{yuceData.silverWpPercentage | abs}}%
+                                            </div>
+                                        </span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </panel>
             </div>
         </div>
@@ -24,8 +138,35 @@
         components: {
             LineChart,
         },
+        filters: {
+            abs(val) {
+                let price = parseFloat(val);
+                if (price < 0) {
+                    return -price;
+                } else {
+                    return price;
+                }
+            }
+        },
         data() {
             return {
+                yuceData: {
+                    goldZpTotol: 0,
+                    goldZpPercentage: null,
+                    goldZpTotolToday: 0,
+
+                    goldWpTotol: 0,
+                    goldWpPercentage: null,
+                    goldWpTotolToday: 0,
+
+                    silverZpTotol: 0,
+                    silverZpPercentage: null,
+                    silverZpTotolToday: 0,
+
+                    silverWpTotol: 0,
+                    silverWpPercentage: null,
+                    silverWpTotolToday: 0
+                },
                 loading: null,
                 lineChart: {
                     data: {
@@ -116,12 +257,67 @@
             };
         },
         mounted() {
+            this.yuceGoldZp();
             this.loadingFunction();
+            this.yuceGoldWp();
             this.sprider();
+            this.yuceSilverWp();
+            this.yuceSilverZp();
         },
         methods: {
-            sprider(){
-                this.$product.spider().then(()=>{
+            yuceSilverZp() {
+                let data = {
+                    type: 'silver',
+                    price: 'zp_price'
+                };
+                this.$product.Yuce(data).then(res => {
+                    console.log(res);
+                    this.yuceData.silverZpTotol = res.data.data;
+                    this.yuceData.silverZpTotolToday = res.data.today_price;
+                    this.yuceData.silverZpPercentage = res.data.percentum;
+                });
+            },
+            yuceSilverWp() {
+                let data = {
+                    type: 'silver',
+                    price: 'wp_price'
+                };
+                this.$product.Yuce(data).then(res => {
+                    console.log(res);
+                    this.yuceData.silverWpTotol = res.data.data;
+                    this.yuceData.silverWpTotolToday = res.data.today_price;
+                    this.yuceData.silverWpPercentage = res.data.percentum;
+
+                });
+            },
+            yuceGoldZp() {
+                let data = {
+                    type: 'gold',
+                    price: 'zp_price'
+                };
+                this.$product.Yuce(data).then(res => {
+                    console.log(res);
+                    this.yuceData.goldZpTotol = res.data.data;
+                    this.yuceData.goldZpTotolToday = res.data.today_price;
+                    this.yuceData.goldZpPercentage = res.data.percentum;
+
+                });
+            },
+            yuceGoldWp() {
+                let data = {
+                    type: 'gold',
+                    price: 'wp_price'
+                };
+                this.$product.Yuce(data).then(res => {
+                    console.log(res);
+                    this.yuceData.goldWpTotol = res.data.data;
+                    this.yuceData.goldWpTotolToday = res.data.today_price;
+                    this.yuceData.goldWpPercentage = res.data.percentum;
+
+                });
+            },
+            sprider() {
+                this.$product.spider().then(() => {
                     this.loading.close();
                     this.getList();
                     this.getsilver();

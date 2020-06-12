@@ -6,7 +6,8 @@ let product = {
     buyProduct,
     getBill,
     spider,
-    getForecastList
+    getForecastList,
+    Yuce
 };
 
 function productList(data) {
@@ -50,6 +51,14 @@ function getBill(data) {
 function getForecastList(data) {
     return axios({
         url: `/api/goods/resource/`,
+        method: 'get',
+        params:data
+    });
+}
+
+function Yuce(data) {
+    return axios({
+        url: `/api/goods/resource/yuce/`,
         method: 'get',
         params:data
     });
